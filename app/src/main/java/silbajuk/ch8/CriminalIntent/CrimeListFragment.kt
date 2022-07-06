@@ -1,6 +1,7 @@
 package silbajuk.ch8.CriminalIntent
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +66,8 @@ class CrimeListFragment : Fragment() {
         fun bind(crime: Crime){
             this.crime = crime
             titleTextView.text = crime.title
-            dateTextView.text = crime.date.toString()
+            dateTextView.text = DateFormat.format("EEE, MMM dd, yyyy", crime.date)
+
             solvedImageView.visibility = when {
                 crime.isSolved -> View.VISIBLE
                 else -> View.INVISIBLE
