@@ -1,9 +1,12 @@
 package silbajuk.ch8.CriminalIntent
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 
-data class Crime(val id: UUID = UUID.randomUUID(),
-                var title: String = "",
-                var date :Date = Date(),
-                var isSolved:Boolean = false,
-                var requiresPolice : Boolean = false)
+@Entity
+data class Crime(@PrimaryKey var id: UUID = UUID.randomUUID(),
+                 var title: String = "",
+                 var date :Date = Date(),
+                 var isSolved:Boolean = false,
+                 var requiresPolice : Boolean = false)
