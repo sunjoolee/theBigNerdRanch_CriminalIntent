@@ -72,11 +72,6 @@ class CrimeListFragment : Fragment() {
                 crime.isSolved -> View.VISIBLE
                 else -> View.INVISIBLE
             }
-
-            if(crime.requiresPolice && crime.isSolved){
-                val policeButton : Button =  itemView.findViewById(R.id.police_button)
-                policeButton.isEnabled = false
-            }
         }
 
         override fun onClick(p0: View?) {
@@ -86,20 +81,9 @@ class CrimeListFragment : Fragment() {
 
     private inner class CrimeAdapter(var crimes:List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
 
-        override fun getItemViewType(position: Int): Int {
-            val crime = crimes[position]
-            val viewType = when(crime.requiresPolice){
-                false -> 1
-                else -> 2
-            }
-            return viewType
-        }
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
-            val view = when (viewType) {
-                1 -> layoutInflater.inflate(R.layout.list_item_crime, parent, false)
-                else -> layoutInflater.inflate(R.layout.list_item_crime_police, parent, false)
-            }
+            val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
+
             return CrimeHolder(view)
         }
 
