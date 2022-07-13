@@ -1,5 +1,6 @@
 package silbajuk.ch8.CriminalIntent
 
+import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -14,8 +15,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 class CrimeListFragment : Fragment() {
+
+    //호스팅 액티비티에서 구현할 인터페이스
+    interface Callbacks{
+        fun onCrimeSelected(crimeId: UUID)
+    }
+    private var callbacks : Callbacks? = null
 
     private lateinit var crimeRecyclerView: RecyclerView
 
@@ -29,6 +37,11 @@ class CrimeListFragment : Fragment() {
         fun newInstance(): CrimeListFragment{
             return CrimeListFragment()
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
     }
 
     override fun onCreateView(
@@ -57,6 +70,11 @@ class CrimeListFragment : Fragment() {
                 }
             }
         )
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     private fun updateUI(crimes:List<Crime>){
@@ -88,7 +106,8 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(p0: View?) {
-            Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_LONG).show()
+            //Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_LONG).show()
+            callbacks?.onCrimeSelected(crime.id)
         }
     }
 
