@@ -1,6 +1,7 @@
 package silbajuk.ch8.CriminalIntent
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import silbajuk.ch8.CriminalIntent.database.CrimeDao
 import silbajuk.ch8.CriminalIntent.database.CrimeDatabase
@@ -19,8 +20,8 @@ class CrimeRepository private constructor(context: Context){
 
     private val crimeDao = database.crimeDao()
 
-    fun getCrimes(): List<Crime> = crimeDao.getCrimes()
-    fun getCrime(id: UUID): Crime? = crimeDao.getCrime(id)
+    fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
+    fun getCrime(id: UUID): LiveData<Crime?> = crimeDao.getCrime(id)
 
     companion object{
         private var INSTANCE: CrimeRepository? = null
