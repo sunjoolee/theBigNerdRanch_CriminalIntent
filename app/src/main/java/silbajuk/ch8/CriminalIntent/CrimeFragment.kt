@@ -18,6 +18,9 @@ import java.util.*
 //프래그먼트 인자를 번들에 저장할 때 사용하는 키 문자열
 private const val ARG_CRIME_ID = "crime_id"
 
+//DatePickerFragment 태그 상수
+private const val DIALOG_DATE = "DialogDate"
+
 class CrimeFragment : Fragment() {
     //사용자가 화면에서 변경한 현재의 데이터를 갖는 Crime 객체
     private lateinit var crime : Crime
@@ -59,11 +62,6 @@ class CrimeFragment : Fragment() {
         dateButton = view.findViewById(R.id.crime_date) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
 
-        dateButton.apply{
-            text = crime.date.toString()
-            isEnabled = false
-        }
-
         return view
     }
 
@@ -99,6 +97,12 @@ class CrimeFragment : Fragment() {
 
         solvedCheckBox.setOnCheckedChangeListener{_, isChecked ->
             crime.isSolved = isChecked
+        }
+
+        dateButton.setOnClickListener {
+            DatePickerFragment().apply {
+                show(this@CrimeFragment.parentFragmentManager, DIALOG_DATE)
+            }
         }
     }
 
