@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
 import java.util.*
@@ -18,12 +19,9 @@ import java.util.*
 //프래그먼트 인자를 번들에 저장할 때 사용하는 키 문자열
 private const val ARG_CRIME_ID = "crime_id"
 
-//DatePickerFragment 태그 상수
-private const val DIALOG_DATE = "DialogDate"
+private const val REQUEST_DATE = "DialogDate"
 
-private const val REQUEST_DATE = 0
-
-class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
+class CrimeFragment : Fragment(),  FragmentResultListener{
     //사용자가 화면에서 변경한 현재의 데이터를 갖는 Crime 객체
     private lateinit var crime : Crime
 
@@ -46,9 +44,13 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         }
     }
 
-    override fun onDateSelected(date: Date) {
-        crime.date = date
-        updateUI()
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        when(requestKey){
+            REQUEST_DATE ->{
+                crime.date = DatePickerFragment.getSelectedDate(result)
+                updateUI()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +86,8 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                     updateUI()
                 }
             })
+
+        childFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
@@ -107,10 +111,9 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         }
 
         dateButton.setOnClickListener {
-            DatePickerFragment.newInstance(crime.date).apply {
-                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
-                show(this@CrimeFragment.parentFragmentManager, DIALOG_DATE)
-            }
+            DatePickerFragment
+                .newInstance(crime.date, REQUEST_DATE)
+                .show(childFragmentManager, REQUEST_DATE)
         }
     }
 
