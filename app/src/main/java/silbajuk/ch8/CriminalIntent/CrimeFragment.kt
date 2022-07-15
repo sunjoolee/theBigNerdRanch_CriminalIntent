@@ -21,7 +21,9 @@ private const val ARG_CRIME_ID = "crime_id"
 //DatePickerFragment 태그 상수
 private const val DIALOG_DATE = "DialogDate"
 
-class CrimeFragment : Fragment() {
+private const val REQUEST_DATE = 0
+
+class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     //사용자가 화면에서 변경한 현재의 데이터를 갖는 Crime 객체
     private lateinit var crime : Crime
 
@@ -42,6 +44,11 @@ class CrimeFragment : Fragment() {
                 arguments = args
             }
         }
+    }
+
+    override fun onDateSelected(date: Date) {
+        crime.date = date
+        updateUI()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +107,8 @@ class CrimeFragment : Fragment() {
         }
 
         dateButton.setOnClickListener {
-            DatePickerFragment().apply {
+            DatePickerFragment.newInstance(crime.date).apply {
+                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
                 show(this@CrimeFragment.parentFragmentManager, DIALOG_DATE)
             }
         }
